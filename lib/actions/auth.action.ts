@@ -1,7 +1,6 @@
 "use server";
 
 import { auth, db } from "@/firebase/admin";
-import { signOut } from "firebase/auth";
 import { cookies } from "next/headers";
 
 const oneWeek = 60 * 60 * 24 * 7 * 1000;

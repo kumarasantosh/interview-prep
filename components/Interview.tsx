@@ -3,17 +3,25 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import DisplayTech from "./DisplayTech";
+import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 
-const Interview = ({
-  interviewId,
+const Interview = async ({
+  id,
   userId,
   role,
   type,
   techstack,
   createdAt,
 }: InterviewCardProps) => {
-  const feedback = null as Feedback | null;
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
+  const feedback =
+    userId && id
+      ? await getFeedbackByInterviewId({
+          interviewId: id,
+          userId,
+        })
+      : null;
+
   const formattedDate = dayjs(feedback?.createdAt || createdAt);
   const now = dayjs();
   return (
@@ -31,7 +39,7 @@ const Interview = ({
             className="rounded-full object-fit size-[90px]"
           />
           <h3 className="mt-5 capitalize">{role} Inter</h3>
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 mt-3">
             <Image height={22} width={22} src="/calendar.svg" alt="" />
             <p>{now.format("YYYY-MM-DD")}</p>
             <div className="flex flex-row gap-2 items-center">
@@ -47,11 +55,7 @@ const Interview = ({
           <DisplayTech techStack={techstack} />
           <button className="btn-primary">
             <Link
-              href={
-                feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
-              }
+              href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
             >
               {feedback ? "Check Feedback" : "Take now"}
             </Link>
