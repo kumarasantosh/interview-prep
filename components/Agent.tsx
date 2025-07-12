@@ -1,12 +1,11 @@
 "use client";
 import { cn } from "@/utils";
 import Image from "next/image";
-import { useRouter } from "next/router";
-
-import React, { useEffect, useState } from "react";
 
 //
 import { vapi } from "@/lib/vapi.sdk";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
