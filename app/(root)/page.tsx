@@ -13,6 +13,7 @@ import React from "react";
 
 const page = async () => {
   const user = await getCurrentUser();
+  console.log(user.id);
   const [userInterviews, latestInterview] = await Promise.all([
     await getInterviewByUserId(user?.id!),
     await getLatestInterviews({ userId: user?.id! }),

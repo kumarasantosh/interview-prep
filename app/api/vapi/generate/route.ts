@@ -5,14 +5,20 @@ import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { getRandomInterviewCover } from "@/utils";
 import { db } from "@/firebase/admin";
-import { getCurrentUser } from "@/lib/actions/auth.action";
 export async function GET() {
   return Response.json({ success: true, data: "Mess" }, { status: 200 });
 }
 
 export async function POST(request: Request) {
-  const { type, role, level, techstack, amount } = await request.json();
-  const user = await getCurrentUser();
+  const { type, role, level, techstack, amount, userid } = await request.json();
+
+  if (!type || !role || !level || !techstack || !amount || !userid) {
+    return Response.json(
+      { success: false, error: "Missing required fields" },
+      { status: 400 }
+    );
+  }
+
   try {
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
@@ -30,21 +36,26 @@ export async function POST(request: Request) {
         Thank you! <3
 `,
     });
+
     const interview = {
       role,
       type,
       level,
       techstack: techstack.split(","),
       questions: JSON.parse(questions),
-      userId: user?.id,
+      userId: userid,
       finalized: true,
       coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
     };
+
     await db.collection("interviews").add(interview);
     return Response.json({ success: true }, { status: 200 });
   } catch (err) {
-    console.log(err);
-    return Response.json({ success: false, err }, { status: 500 });
+    console.error(err);
+    return Response.json(
+      { success: false, error: err.message },
+      { status: 500 }
+    );
   }
 }

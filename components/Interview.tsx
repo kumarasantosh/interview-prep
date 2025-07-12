@@ -38,7 +38,7 @@ const Interview = async ({
             alt=""
             className="rounded-full object-fit size-[90px]"
           />
-          <h3 className="mt-5 capitalize">{role} Inter</h3>
+          <h3 className="mt-5 capitalize">{role} Interview</h3>
           <div className="flex flex-row gap-2 mt-3">
             <Image height={22} width={22} src="/calendar.svg" alt="" />
             <p>{now.format("YYYY-MM-DD")}</p>
